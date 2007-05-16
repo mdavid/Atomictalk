@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/transform/build-output.xsl"?>
+<!--
+  COPYRIGHT: (c) 2007, M. David Peterson (mailto:m.david@xmlhacker.com; http://mdavid.name/)
+  LICENSE: The code contained in this file is licensed under The New BSD License. Please see
+  http://www.opensource.org/licenses/bsd-license.php for specific detail.
+  Contributors to this code base include, 
+    Russ Miles (mailto:aohacker@gmail.com; http://www.russmiles.com/)
+-->
+<my:session xmlns:my="http://xameleon.org/my">
+  <my:page xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:page="http://atomictalk.org/page"
+      xmlns:service="http://atomictalk.org/page/service"
+      xmlns:output="http://atomictalk.org/page/output"
+      xmlns:head="http://atomictalk.org/page/head"
+      xmlns:body="http://atomictalk.org/page/body"
+      xmlns:advice="http://aspectxml.org/advice"
+      xmlns:view="http://atomictalk.org/page/view"
+      xmlns:form="http://atomictalk.org/page/view/form"
+      xmlns:menu="http://atomictalk.org/page/view/menu"
+      xmlns:resource="http://atomictalk.org/page/resource"
+      xmlns:model="http://atomictalk.org/page/model"
+      xmlns:html="http://www.w3.org/1999/xhtml"
+      xmlns:app="http://purl.org/atom/app#"
+      xmlns:atom="http://www.w3.org/2005/Atom">
+    <page:config>
+      <page:advice>
+        <advice:TODO>TODO:@@space@@[$:comment::foobar:$]</advice:TODO>
+        <advice:page-title>@@domain.label@@</advice:page-title>
+        <advice:date>May 16th, 2007</advice:date>
+        <advice:protocol>http://</advice:protocol>
+        <advice:space></advice:space>
+        <advice:dot>.</advice:dot>
+        <advice:colon>:</advice:colon>
+        <advice:sub-domain>test</advice:sub-domain>
+        <advice:domain-name>atomictalk</advice:domain-name>
+        <advice:domain>|$$if:@@sub-domain@@then:@@sub-domain@@@@dot@@else:@@empty@@$$|@@domain-name@@|$$if:@@root@@then:@@dot@@@@root@@else:@@empty@@$$|</advice:domain>
+        <advice:domain.label>atomictalk</advice:domain.label>
+        <advice:root>org</advice:root>
+        <advice:base-uri>@@protocol@@@@domain@@|$$if:@@port@@then:@@colon@@@@port@@else:@@empty@@$$|</advice:base-uri>
+        <advice:service-gateway>@@base-uri@@/service</advice:service-gateway>
+        <advice:openid-gateway>/service/gatekeeper/login?</advice:openid-gateway>
+        <advice:search-summary>/summary?</advice:search-summary>
+        <advice:current-location>@@base-uri@@/@@location@@</advice:current-location>
+        <!-- <advice:location></advice:location>
+        <advice:location.label></advice:location.label>
+        <advice:current-location.label></advice:current-location.label> -->
+        <advice:static>@@base-uri@@</advice:static>
+        <advice:static-css-browser>@@static@@/css/@@browser@@</advice:static-css-browser>
+        <advice:static-js-browser>@@static@@/js/@@browser@@</advice:static-js-browser>
+        <advice:empty></advice:empty>
+        <!-- <advice:lat>resource:ip-location/lat</advice:lat>
+        <advice:long>resource:ip-location/long</advice:long>
+        <advice:max-depth>8</advice:max-depth>
+        <advice:google-maps.key>ABQIAAAAEPQGOws5xNa--1d-oQQDjhTGATBBJj1ek54YiRFsu72FXrsCiBTXTbpwI990CeZRoqCkI4KdcuGiLQ</advice:google-maps.key> -->
+        <advice:search.box.label>Search Austin For...</advice:search.box.label>
+        <advice:browser compare="xsl:vendor" compare-with="Microsoft">ie</advice:browser>
+        <advice:browser compare="xsl:vendor" compare-with="Transformiix">mozilla</advice:browser>
+        <advice:browser compare="xsl:vendor" compare-with="libxslt">safari</advice:browser>
+        <advice:browser compare="xsl:vendor" compare-with="Opera">opera</advice:browser>
+        <advice:search-form.text>@value@|default:'Search...'|</advice:search-form.text>
+        <advice:search-form.input>@value@|default:'Go!'|</advice:search-form.input>
+        <advice:search-form.maxlength>@@maxlength@@|default:'255'|</advice:search-form.maxlength>
+        <advice:search-form.method>@method@|default:@@generate@@|</advice:search-form.method>
+        <advice:search-form.action>@action@|default:@@generate@@|</advice:search-form.action>
+        <advice:target.default>@target@|default:@@generate@@|</advice:target.default>
+        <advice:name.default>@id@|default:@@generate@@|</advice:name.default>
+        <advice:class.default>@class@|default:@@empty@@|</advice:class.default>
+        <advice:id.default>@id@|default:@@generate@@|</advice:id.default>
+        <advice:toggle.id>control-center</advice:toggle.id>
+        <advice:toggle.duration>500</advice:toggle.duration>
+        <advice:onload.mySlider>mySlider.toggle()</advice:onload.mySlider>
+        <advice:atom>application/atom+xml</advice:atom>
+        <!-- 
+        <advice:google-maps.key_uri>http://maps.google.com/maps?file=api&amp;v=2&amp;key=@@google-maps.key@@</advice:google-maps.key>  
+        -->
+      </page:advice>
+    </page:config>
+    <page:service>
+      <service:ip-location href="@@service-gateway@@/ipgeolocator/geocode" />
+      <service:language-selector href="@@TODO@@" />
+    </page:service>
+    <page:model>
+      <model:lang binding="@@atom@@">
+        @@TODO|$comment: Data that binds a language code with the proper URI to gain access to content in the specified language$|@@ 
+      </model:lang>
+      <model:menu binding="@@atom@@">
+        @@TODO|$comment: $|@@
+      </model:menu>
+    </page:model>
+    <page:view>
+      <view:search-form
+          xmlns:form="http://atomictalk.org/page/view/form">
+        <form:search-form type="html"
+            id="@@id.generate|default:@id@|@@"
+            method="@@search-form.method@@"
+            action="@@search-form.action@@"
+            target="@@target.default@@"
+            class="@@class.default@@">
+          <form:input type="text"
+              name="@name@|required|"
+              id="@@id.generate|default:@id@|@@"
+              maxlength="@@search-form.maxlength@@"
+              value="@@search-form.text@@"
+              onclick="if (this.value == '@@search-form.text@@') this.value = ''; return true;"
+              onblur="if (this.value == '') this.value = '@@search-form.text@@'; return true;"
+              class="@@class.default@@" />
+          <form:input type="hidden"
+              id="@@id.generate|default:@id@|@@"
+              name="@name@|required|"
+              value="@value@|required|"
+              class="@@class.default@@" />
+          <form:input type="submit"
+              id="@@id.generate|default:@id@|@@"
+              value="@@search-form.input@@"
+              class="@@class.default@@" />
+        </form:search-form>
+      </view:search-form>
+      <view:menu>
+        <menu:list type="html"
+            id="@@id.generate|default:@id@|@@">
+          <menu:item type="label">@label@</menu:item>
+          <menu:item type="link">
+            <html:a href="@href@">@label@</html:a>
+          </menu:item>
+        </menu:list>
+      </view:menu>
+    </page:view>
+    <page:resource>
+      <resource:ip-location type="string" src="@@service-gateway@@@@service:ip-location@@" />
+      <resource:help-support type="page" href="@@base-uri@@/support/" label="Help/Support" />
+      <resource:create-new-account type="page" href="@@base-uri@@/create-new-account/" label="Create New" />
+      <resource:login type="page" href="@@base-uri@@/login/" label="Login" />
+      <resource:lang type="string" src="@src@" label="model:lang/$@@language@@/@label" />
+    </page:resource>
+    <page:output type="xhtml-strict" cdata-section-elements="script" indent="no">
+      <output:xhtml-strict>
+        <output:doctype-system>-//W3C//DTD XHTML 1.0 Strict//EN</output:doctype-system>
+        <output:doctype-public>http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</output:doctype-public>
+        <output:method>html</output:method>
+      </output:xhtml-strict>
+      <page:head>
+        <head:title>@@page-title@@</head:title>
+        <head:include fileType="css" href="@@static@@/css/base.css" />
+        <head:include fileType="css" href="@@static@@/css/transparency.css" />
+        <head:include fileType="css" href="@@static-css-browser@@.css" />
+        <head:include fileType="javascript" href="@@static@@/js/base.js" />
+        <!-- <head:include fileType="javascript"
+            href="http://maps.google.com/maps?file=api&amp;v=2&amp;key=@@google-maps.key@@" />
+        <head:include fileType="javascript">
+				    @@static@@
+				</head:include> -->
+      </page:head>
+      <page:body>
+        <body:onload action="@@onload.mySlider@@"/>
+        <body:html>
+            <!-- 
+            <view:menu match="list" use="html">
+              <menu:item match="link" use="resource:help-support"/>
+            </view:menu> 
+            -->
+        </body:html>
+      </page:body>
+    </page:output>
+  </my:page>
+</my:session>
