@@ -34,8 +34,8 @@
   <xsl:param name="cond-if-token" select="'test:'" />
   <xsl:param name="cond-then-token" select="'IfTrue:'" />
   <xsl:param name="cond-else-token" select="'IfFalse:'" />
-  <xsl:param name="system-variable-pre-delimiter" select="'%'" />
-  <xsl:param name="system-variable-post-delimiter" select="'%'" />
+  <xsl:param name="system-variable-pre-delimiter" select="'%%'" />
+  <xsl:param name="system-variable-post-delimiter" select="'%%'" />
   <xsl:param name="parameter-list-pre-delimiter" select="'($'" />
   <xsl:param name="parameter-list-post-delimiter" select="'$)'" />
   <xsl:param name="parameter-pre-delimiter" select="':'" />
