@@ -108,7 +108,6 @@
     <html>
       <xsl:apply-templates select="page:head" />
       <xsl:apply-templates select="page:body" />
-      <xsl:copy-of select="$advice"/>
     </html>
   </xsl:template>
 
