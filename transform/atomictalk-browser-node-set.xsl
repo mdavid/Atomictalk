@@ -102,9 +102,6 @@
   </xsl:template>
 
   <xsl:template match="page:output">
-  <xsl:variable name="advice-compare">
-    <xsl:copy-of select="$advice-base"/>
-  </xsl:variable>
     <html>
       <xsl:apply-templates select="page:head" />
       <xsl:apply-templates select="page:body" />
