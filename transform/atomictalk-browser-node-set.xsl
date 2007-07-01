@@ -30,10 +30,11 @@
   <xsl:variable name="vendor-uri" select="system-property('xsl:vendor-uri')" />
   <xsl:variable name="page" select="/my:session/my:page" />
   <xsl:variable name="browser" select="$page/page:config/page:browser[@vendor = $vendor]/@replace" />
-  <xsl:variable name="advice-var">
-    <xsl:apply-templates select="$page/page:config/page:advice" />
+  <xsl:variable name="advice-base" select="$page/page:config/page:advice"/>
+  <xsl:variable name="pre-evaluated-advice">
+    <xsl:apply-templates select="$advice-base" />
   </xsl:variable>
-  <xsl:variable name="advice" select="exsl:node-set($advice-var)"/>
+  <xsl:variable name="advice" select="exsl:node-set($pre-evaluated-advice)"/>
   <xsl:variable name="resource" select="$page/page:resource" />
   <xsl:variable name="service" select="$page/page:service" />
   <xsl:variable name="view" select="$page/page:view" />
@@ -84,8 +85,11 @@
       cdata-section-elements="script" indent="no" />
 
   <xsl:template match="page:advice">
+  <xsl:variable name="advice-compare">
+    <xsl:copy-of select="$advice-base"/>
+  </xsl:variable>
     <xsl:call-template name="replace">
-      <xsl:with-param name="string" select="$page/page:config/page:advice"/>
+      <xsl:with-param name="string" select="exsl:node-set($advice-compare)"/>
     </xsl:call-template>
   </xsl:template>
 
@@ -98,6 +102,9 @@
   </xsl:template>
 
   <xsl:template match="page:output">
+  <xsl:variable name="advice-compare">
+    <xsl:copy-of select="$advice-base"/>
+  </xsl:variable>
     <html>
       <xsl:apply-templates select="page:head" />
       <xsl:apply-templates select="page:body" />
@@ -238,7 +245,7 @@
         <xsl:variable name="name"
             select="substring-before(substring-after($nString, $replace-token-pre-delimiter), $replace-token-pre-delimiter)" />
         <xsl:variable name="replace-with">
-          <xsl:apply-templates select="$advice/advice:*[local-name() = $name]" />
+          <xsl:apply-templates select="$advice-base/advice:*[local-name() = $name]" />
         </xsl:variable>
         <xsl:call-template name="replace">
           <xsl:with-param name="string"
@@ -268,7 +275,7 @@
         <xsl:variable name="else" select="substring-after($conditional, $cond-else-token)" />
         <xsl:variable name="nString">
           <xsl:choose>
-            <xsl:when test="$advice/advice:*[local-name() = substring-before(substring-after($if, '@@'), '@@')]">
+            <xsl:when test="$advice-base/advice:*[local-name() = substring-before(substring-after($if, '@@'), '@@')]">
               <xsl:variable name="replace-string">
                 <xsl:call-template name="replace">
                   <xsl:with-param name="string" select="$then" />
