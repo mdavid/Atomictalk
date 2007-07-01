@@ -6,31 +6,34 @@
   Contributors to this code base include, 
     Russ Miles (mailto:aohacker@gmail.com; http://www.russmiles.com/)
 -->
-<xsl:stylesheet version="1.0" xmlns="http://www.w3.org/1999/xhtml" 
-  xmlns:my="http://xameleon.org/my"
-  xmlns:page="http://atomictalk.org/page" 
-  xmlns:service="http://atomictalk.org/page/service"
-  xmlns:output="http://atomictalk.org/page/output" 
-  xmlns:head="http://atomictalk.org/page/head"
-  xmlns:body="http://atomictalk.org/page/body" 
-  xmlns:advice="http://aspectxml.org/advice"
-  xmlns:view="http://atomictalk.org/page/view" 
-  xmlns:form="http://atomictalk.org/page/view/form"
-  xmlns:menu="http://atomictalk.org/page/view/menu" 
-  xmlns:exsl="http://exslt.org/common"
-  xmlns:resource="http://atomictalk.org/page/resource" 
-  xmlns:model="http://atomictalk.org/page/model"
-  xmlns:app="http://purl.org/atom/app#"
-  xmlns:atompub="http://www.w3.org/2007/app" 
-  xmlns:atom="http://www.w3.org/2005/Atom"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  exclude-result-prefixes="my app advice atom head page service resource output form body view menu model">
+<xsl:stylesheet version="1.0" xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:my="http://xameleon.org/my"
+    xmlns:page="http://atomictalk.org/page"
+    xmlns:service="http://atomictalk.org/page/service"
+    xmlns:output="http://atomictalk.org/page/output"
+    xmlns:head="http://atomictalk.org/page/head"
+    xmlns:body="http://atomictalk.org/page/body"
+    xmlns:advice="http://aspectxml.org/advice"
+    xmlns:view="http://atomictalk.org/page/view"
+    xmlns:form="http://atomictalk.org/page/view/form"
+    xmlns:menu="http://atomictalk.org/page/view/menu"
+    xmlns:exsl="http://exslt.org/common"
+    xmlns:resource="http://atomictalk.org/page/resource"
+    xmlns:model="http://atomictalk.org/page/model"
+    xmlns:app="http://purl.org/atom/app#"
+    xmlns:atompub="http://www.w3.org/2007/app"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    exclude-result-prefixes="my app advice atom head page service resource output form body view menu model">
 
   <xsl:variable name="vendor" select="system-property('xsl:vendor')" />
   <xsl:variable name="vendor-uri" select="system-property('xsl:vendor-uri')" />
   <xsl:variable name="page" select="/my:session/my:page" />
   <xsl:variable name="browser" select="$page/page:config/page:browser[@vendor = $vendor]/@replace" />
-  <xsl:variable name="advice" select="$page/page:config/page:advice" />
+  <xsl:variable name="advice-var">
+    <xsl:apply-templates select="$page/page:config/page:advice" />
+  </xsl:variable>
+  <xsl:variable name="advice" select="exsl:node-set($advice-var)"/>
   <xsl:variable name="resource" select="$page/page:resource" />
   <xsl:variable name="service" select="$page/page:service" />
   <xsl:variable name="view" select="$page/page:view" />
@@ -80,6 +83,12 @@
       doctype-public="http://www.w3.org/TR/html4/strict.dtd" method="html"
       cdata-section-elements="script" indent="no" />
 
+  <xsl:template match="page:advice">
+    <xsl:call-template name="replace">
+      <xsl:with-param name="string" select="$page/page:config/page:advice"/>
+    </xsl:call-template>
+  </xsl:template>
+
   <xsl:template match="my:session">
     <xsl:apply-templates />
   </xsl:template>
@@ -92,6 +101,7 @@
     <html>
       <xsl:apply-templates select="page:head" />
       <xsl:apply-templates select="page:body" />
+      <xsl:copy-of select="$advice"/>
     </html>
   </xsl:template>
 
