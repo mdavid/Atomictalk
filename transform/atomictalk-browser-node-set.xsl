@@ -24,15 +24,25 @@
     xmlns:atompub="http://www.w3.org/2007/app"
     xmlns:atom="http://www.w3.org/2005/Atom"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    exclude-result-prefixes="my app advice atom head page service resource output form body view menu model">
+    xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+    exclude-result-prefixes="my app advice atom head page service resource output form body view menu model exsl msxsl">
+
+  <msxsl:script language="JScript" implements-prefix="exsl">
+   this['node-set'] =  function (x) {
+    return x;
+    }
+  </msxsl:script>
 
   <xsl:variable name="vendor" select="system-property('xsl:vendor')" />
   <xsl:variable name="vendor-uri" select="system-property('xsl:vendor-uri')" />
   <xsl:variable name="page" select="/my:session/my:page" />
   <xsl:variable name="browser" select="$page/page:config/page:browser[@vendor = $vendor]/@replace" />
-  <xsl:variable name="advice-base" select="$page/page:config/page:advice"/>
+  <xsl:variable name="advice-base-temp">
+    <xsl:copy-of select="$page/page:config/page:advice"/>
+  </xsl:variable>
+  <xsl:variable name="advice-base" select="exsl:node-set($advice-base-temp)"/>
   <xsl:variable name="pre-evaluated-advice">
-    <xsl:apply-templates select="$advice-base" />
+    <xsl:apply-templates select="$page/page:config/page:advice" />
   </xsl:variable>
   <xsl:variable name="advice" select="exsl:node-set($pre-evaluated-advice)"/>
   <xsl:variable name="resource" select="$page/page:resource" />
@@ -60,8 +70,7 @@
   <xsl:param name="parameter-list-delimeter" select="','"/>
   <xsl:param name="parameter-value-assigment-token" select="'='"/>
   <xsl:variable name="lb">
-    <xsl:text>
-</xsl:text>
+    <xsl:text></xsl:text>
   </xsl:variable>
   <xsl:variable name="quote">"</xsl:variable>
   <xsl:variable name="squote">'</xsl:variable>
@@ -85,12 +94,15 @@
       cdata-section-elements="script" indent="no" />
 
   <xsl:template match="page:advice">
-  <xsl:variable name="advice-compare">
-    <xsl:copy-of select="$advice-base"/>
-  </xsl:variable>
-    <xsl:call-template name="replace">
-      <xsl:with-param name="string" select="exsl:node-set($advice-compare)"/>
-    </xsl:call-template>
+    <xsl:apply-templates select="advice:*" mode="pre-compile-advice"/>
+  </xsl:template>
+
+  <xsl:template match="advice:*" mode="pre-compile-advice">
+    <xsl:element name="{name()}">
+      <xsl:call-template name="replace">
+        <xsl:with-param name="string" select="."/>
+      </xsl:call-template>
+    </xsl:element>
   </xsl:template>
 
   <xsl:template match="my:session">
@@ -234,7 +246,7 @@
             select="substring-before(substring-before(substring-after($nString, $closure-token-pre-delimiter), $closure-token-post-delimiter), $parameter-list-pre-delimiter)" />
         <xsl:call-template name="replace-vars">
           <xsl:with-param name="value-string" select="substring-before(substring-after($nString, $parameter-list-pre-delimiter), $parameter-list-post-delimiter)" />
-          <xsl:with-param name="replace-var-string" select="substring-before(substring-after($advice/advice:*[local-name() = $name]/text(), $replace-parameter-list-pre-delimiter), $replace-parameter-list-post-delimiter)"/>
+          <xsl:with-param name="replace-var-string" select="substring-before(substring-after($advice-base/advice:*[local-name() = $name]/text(), $replace-parameter-list-pre-delimiter), $replace-parameter-list-post-delimiter)"/>
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="contains($nString, $replace-token-pre-delimiter)">

@@ -24,7 +24,8 @@
   xmlns:atompub="http://www.w3.org/2007/app" 
   xmlns:atom="http://www.w3.org/2005/Atom"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  exclude-result-prefixes="my app advice atom head page service resource output form body view menu model">
+  xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+  exclude-result-prefixes="my app advice atom head page service resource output form body view menu model msxsl">
 
   <xsl:variable name="vendor" select="system-property('xsl:vendor')" />
   <xsl:variable name="vendor-uri" select="system-property('xsl:vendor-uri')" />
